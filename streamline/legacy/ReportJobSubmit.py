@@ -1,6 +1,6 @@
 import os
 import sys
-import pickle
+from streamline.utils.dump import dump_file
 from pathlib import Path
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

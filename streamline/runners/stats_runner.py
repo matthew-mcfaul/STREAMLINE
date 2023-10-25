@@ -3,7 +3,7 @@ import os
 import glob
 import time
 import dask
-import pickle
+from streamline.utils.dump import dump_file
 from pathlib import Path
 from joblib import Parallel, delayed
 from streamline.modeling.utils import SUPPORTED_MODELS
@@ -156,9 +156,8 @@ class StatsRunner:
         metadata['Metric Weighting Composite FI Plots'] = self.metric_weight
         metadata['Top Model Features To Display'] = self.top_features
         # Pickle the metadata for future use
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def get_cluster_params(self, full_path, len_cv):
         exclude_param = ','.join(self.exclude_plots) if self.exclude_plots else None

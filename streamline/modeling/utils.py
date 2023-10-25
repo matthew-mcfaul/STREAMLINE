@@ -1,5 +1,5 @@
 import os
-import pickle
+from streamline.utils.dump import dump_file
 import logging
 import pandas as pd
 import multiprocessing

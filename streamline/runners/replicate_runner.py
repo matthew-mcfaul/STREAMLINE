@@ -1,7 +1,7 @@
 import logging
 import os
 import glob
-import pickle
+from streamline.utils.dump import dump_file
 import time
 import dask
 from pathlib import Path
@@ -203,9 +203,8 @@ class ReplicationRunner:
         metadata['Export Metric Boxplots'] = self.plot_metric_boxplots
         metadata['Match Label'] = self.match_label
         # Pickle the metadata for future use
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def get_algorithms(self):
         pickle_in = open(self.output_path + '/' + self.experiment_name + '/' + "algInfo.pickle", 'rb')

@@ -1,6 +1,6 @@
 import os
 import glob
-import pickle
+from streamline.utils.dump import dump_file
 import time
 import dask
 from pathlib import Path
@@ -108,9 +108,8 @@ class ImputationRunner:
         metadata['Use Data Imputation'] = self.impute_data
         metadata['Use Multivariate Imputation'] = self.multi_impute
         # Pickle the metadata for future use
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def get_cluster_params(self, cv_train_path, cv_test_path):
         cluster_params = [cv_train_path, cv_test_path,

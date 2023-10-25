@@ -1,6 +1,6 @@
 import os
 import glob
-import pickle
+from streamline.utils.dump import dump_file
 import time
 import dask
 from pathlib import Path
@@ -157,9 +157,8 @@ class FeatureImportanceRunner:
         metadata['Use TURF'] = self.use_turf
         metadata['TURF Cutoff'] = self.turf_pct
         metadata['MultiSURF Instance Subset'] = self.instance_subset
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def get_cluster_params(self, cv_train_path, experiment_path, algorithm):
         cluster_params = [cv_train_path, experiment_path, self.class_label,
@@ -338,9 +337,8 @@ class FeatureSelectionRunner:
         metadata['Top Features to Display'] = self.top_features
         metadata['Export Feature Importance Plot'] = self.export_scores
         metadata['Overwrite CV Datasets'] = self.overwrite_cv
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def get_cluster_params(self, full_path, n_datasets):
         algorithms = "'['" + "','".join(self.algorithms) + "']'"

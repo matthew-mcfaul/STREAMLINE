@@ -2,7 +2,7 @@ import os
 import time
 import copy
 import logging
-import pickle
+from streamline.utils.dump import dump_file
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

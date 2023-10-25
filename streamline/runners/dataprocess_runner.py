@@ -1,6 +1,6 @@
 import logging
 import os
-import pickle
+from streamline.utils.dump import dump_file
 import re
 import glob
 import time
@@ -247,9 +247,8 @@ class DataProcessRunner:
         metadata['Random Seed'] = self.random_state
         metadata['Run From Notebook'] = self.show_plots
         # Pickle the metadata for future use
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def get_cluster_params(self, dataset_path):
         exclude_param = ','.join(self.exclude_eda_output) if self.exclude_eda_output else None

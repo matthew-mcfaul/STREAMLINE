@@ -2,7 +2,7 @@ import os
 import csv
 import time
 import random
-import pickle
+from streamline.utils.dump import dump_file
 import logging
 import numpy as np
 from sklearn.feature_selection import mutual_info_classif
@@ -184,11 +184,9 @@ class FeatureImportance(Job):
         in phase 4 (feature selection) of pipeline
         """
         # Save Scores to pickled file for later use
-        outfile = open(
-            self.experiment_path + '/' + self.dataset.name + "/feature_selection/" + output_name
-            + "/pickledForPhase4/" + str(self.cv_count) + '.pickle', 'wb')
-        pickle.dump([scores, score_dict, score_sorted_features], outfile)
-        outfile.close()
+        outfile = self.experiment_path + '/' + self.dataset.name + "/feature_selection/" + output_name
+            + "/pickledForPhase4/" + str(self.cv_count) + '.pickle'
+        dump_file([scores, score_dict, score_sorted_features], outfile)
 
     def save_runtime(self, output_name):
         """

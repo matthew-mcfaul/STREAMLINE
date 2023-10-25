@@ -2,7 +2,7 @@ import csv
 import glob
 import logging
 import os
-import pickle
+from streamline.utils.dump import dump_file
 from pathlib import Path
 
 import pandas as pd
@@ -205,9 +205,9 @@ class ReplicateJob(Job):
                         eda.dataset.data.replace({feat: rename_dict}, inplace=True)
                         ord_labels.loc[feat]['Category'] = list(labels) + new_labels
                         ord_labels.loc[feat]['Encoding'] = list(range(len(list(labels) + new_labels)))
-            with open(self.full_path + "/replication/" + self.apply_name +
-                      '/exploratory/apply_ordinal_encoding.pickle', 'wb') as outfile:
-                pickle.dump(ord_labels, outfile)
+            outfile = self.full_path + "/replication/" + self.apply_name +
+                      '/exploratory/apply_ordinal_encoding.pickle'
+            dump_file(ord_labels, outfile)
             ord_labels.to_csv(self.full_path + "/replication/" + self.apply_name +
                               '/exploratory/Numerical_Encoding_Map.csv')
         except FileNotFoundError:
@@ -318,14 +318,14 @@ class ReplicateJob(Job):
                              + 'DataProcessSummary.csv', index=True)
 
         # Pickle list of feature names to be treated as categorical variables
-        with open(self.full_path + "/replication/" + self.apply_name +
-                  '/exploratory/categorical_features.pickle', 'wb') as outfile:
-            pickle.dump(eda.categorical_features, outfile)
+        outfile = self.full_path + "/replication/" + self.apply_name +
+                  '/exploratory/categorical_features.pickle'
+        dump_file(eda.categorical_features, outfile)
 
         # Pickle list of processed feature names
-        with open(self.full_path + "/replication/" + self.apply_name +
-                  '/exploratory/post_processed_features.pickle', 'wb') as outfile:
-            pickle.dump(list(eda.dataset.data.columns), outfile)
+        outfile = self.full_path + "/replication/" + self.apply_name +
+                  '/exploratory/post_processed_features.pickle'
+        dump_file(list(eda.dataset.data.columns), outfile)
         with open(self.full_path + "/replication/" + self.apply_name +
                   '/exploratory/ProcessedFeatureNames.csv', 'w') as outfile:
             writer = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -445,10 +445,10 @@ class ReplicateJob(Job):
             for algorithm in self.algorithms:
                 ret = self.eval_model(algorithm, cv_count, x_test, y_test)
                 eval_dict[algorithm] = ret
-                pickle.dump(ret, open(self.full_path + "/replication/"
-                                      + self.apply_name + '/model_evaluation/pickled_metrics/'
-                                      + ABBREVIATION[algorithm] + '_CV_'
-                                      + str(cv_count) + "_metrics.pickle", 'wb'))
+                dump_file(ret, self.full_path + "/replication/" +
+                                      self.apply_name + '/model_evaluation/pickled_metrics/' +
+                                      ABBREVIATION[algorithm] + '_CV_' +
+                                      str(cv_count) + "_metrics.pickle"
                 # includes everything from training except feature importance values
             master_list.append(eval_dict)  # update master list with evalDict for this CV model
 

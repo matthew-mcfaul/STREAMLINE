@@ -2,7 +2,7 @@ import copy
 import logging
 import os
 import glob
-import pickle
+from streamline.utils.dump import dump_file
 import time
 import dask
 from tqdm import tqdm
@@ -282,9 +282,8 @@ class ModelExperimentRunner:
         metadata['N (Rule Population Size)'] = self.lcs_n
         metadata['LCS Hyperparameter Sweep Timeout'] = self.lcs_timeout
         # Pickle the metadata for future use
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle", 'wb')
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "metadata.pickle"
+        dump_file(metadata, outfile)
 
     def save_alginfo(self):
         alg_info = dict()
@@ -295,9 +294,8 @@ class ModelExperimentRunner:
                 alg_info[algorithm] = [False, ABBREVIATION[algorithm], COLORS[algorithm]]
 
         # Pickle the algorithm information dictionary for future use
-        pickle_out = open(self.output_path + '/' + self.experiment_name + '/' + "algInfo.pickle", 'wb')
-        pickle.dump(alg_info, pickle_out)
-        pickle_out.close()
+        outfile = self.output_path + '/' + self.experiment_name + '/' + "algInfo.pickle"
+        dump_file(alg_info, outfile)
 
     def get_cluster_params(self, full_path, algorithm, cv_count):
         cluster_params = [full_path, self.output_path, self.experiment_name, cv_count, self.class_label,

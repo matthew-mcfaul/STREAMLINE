@@ -1,7 +1,7 @@
 import csv
 import glob
 import os
-import pickle
+from streamline.utils.dump import dump_file
 import time
 import logging
 from pathlib import Path

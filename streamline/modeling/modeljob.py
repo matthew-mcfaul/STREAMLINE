@@ -1,6 +1,6 @@
 import os
 import logging
-import pickle
+from streamline.utils.dump import dump_file
 import random
 import time
 import numpy as np
@@ -83,9 +83,9 @@ class ModelJob(Job):
         ret = self.run_model(model)
 
         # Pickle all evaluation metrics for ML model training and evaluation
-        pickle.dump(ret, open(self.full_path
-                              + '/model_evaluation/pickled_metrics/'
-                              + self.algorithm + '_CV_' + str(self.cv_count) + "_metrics.pickle", 'wb'))
+        dump_file(ret, self.full_path +
+                                '/model_evaluation/pickled_metrics/' +
+                                self.algorithm + '_CV_' + str(self.cv_count) + "_metrics.pickle"
 
         # Save runtime of ml algorithm training and evaluation
         self.save_runtime()
@@ -161,9 +161,9 @@ class ModelJob(Job):
         if not os.path.exists(self.full_path + '/models/pickledModels/'):
             os.makedirs(self.full_path + '/models/pickledModels/')
 
-        with open(self.full_path + '/models/pickledModels/' + self.algorithm +
-                  '_' + str(self.cv_count) + '.pickle', 'wb') as file:
-            pickle.dump(model.model, file)
+        outfile = self.full_path + '/models/pickledModels/' + self.algorithm +
+                  '_' + str(self.cv_count) + '.pickle'
+        dump_file(model.model, outfile)
 
         metric_list, fpr, tpr, roc_auc, prec, recall, \
             prec_rec_auc, ave_prec, probas_ = model.model_evaluation(x_test, y_test)

@@ -1,6 +1,6 @@
 import os
 import time
-import pickle
+from streamline.utils.dump import dump_file
 import random
 import logging
 import numpy as np
@@ -177,11 +177,9 @@ class ScaleAndImpute(Job):
             if c in self.categorical_variables:
                 x_test[c].fillna(mode_dict[c], inplace=True)
         # Save impute map for downstream use.
-        outfile = open(
-            self.experiment_path + '/' + self.dataset_name
-            + "/scale_impute/categorical_imputer_cv" + str(self.cv_count) + '.pickle', "wb")
-        pickle.dump(mode_dict, outfile)
-        outfile.close()
+        outfile = self.experiment_path + '/' + self.dataset_name
+            + "/scale_impute/categorical_imputer_cv" + str(self.cv_count) + '.pickle'
+        dump_file(mode_dict, outfile)
 
         if self.multi_impute:
             # Impute quantitative features (x) using iterative imputer (multiple imputation)
@@ -190,11 +188,9 @@ class ScaleAndImpute(Job):
             x_train = imputer.transform(x_train)
             x_test = imputer.transform(x_test)
             # Save impute map for downstream use.
-            outfile = open(
-                self.experiment_path + '/' + self.dataset_name +
-                '/scale_impute/ordinal_imputer_cv' + str(self.cv_count) + '.pickle', 'wb')
-            pickle.dump(imputer, outfile)
-            outfile.close()
+            outfile = self.experiment_path + '/' + self.dataset_name +
+                '/scale_impute/ordinal_imputer_cv' + str(self.cv_count) + '.pickle'
+            dump_file(imputer, outfile)
         else:  # Impute quantitative features (x) with simple median imputation
             median_dict = {}
             for c in x_train.columns:
@@ -206,11 +202,9 @@ class ScaleAndImpute(Job):
                 if not (c in self.categorical_variables):
                     x_test[c].fillna(median_dict[c], inplace=True)
             # Save impute map for downstream use.
-            outfile = open(
-                self.experiment_path + '/' + self.dataset_name
-                + '/scale_impute/ordinal_imputer_cv' + str(self.cv_count) + '.pickle', 'wb')
-            pickle.dump(median_dict, outfile)
-            outfile.close()
+            outfile = self.experiment_path + '/' + self.dataset_name
+                + '/scale_impute/ordinal_imputer_cv' + str(self.cv_count) + '.pickle'
+            dump_file(median_dict, outfile)
 
         return x_train, x_test
 
@@ -250,10 +244,9 @@ class ScaleAndImpute(Job):
         # x_test = x_test.round(decimal_places)
 
         # Save scalar for future use
-        outfile = open(self.experiment_path + '/' + self.dataset_name
-                       + '/scale_impute/scaler_cv' + str(self.cv_count) + '.pickle', 'wb')
-        pickle.dump(scaler, outfile)
-        outfile.close()
+        outfile = self.experiment_path + '/' + self.dataset_name
+                       + '/scale_impute/scaler_cv' + str(self.cv_count) + '.pickle'
+        dump_file(scaler, outfile)
         return x_train, x_test
 
     def write_cv_files(self, data_train, data_test):

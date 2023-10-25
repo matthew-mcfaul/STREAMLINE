@@ -1,6 +1,6 @@
 import os
 import glob
-import pickle
+from streamline.utils.dump import dump_file
 from pathlib import Path
 
 

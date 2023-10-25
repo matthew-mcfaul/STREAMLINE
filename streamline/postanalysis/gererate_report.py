@@ -2,7 +2,7 @@ import glob
 import logging
 import math
 import os
-import pickle
+from streamline.utils.dump import dump_file
 import csv
 from datetime import datetime
 from pathlib import Path

@@ -1,7 +1,7 @@
 import csv
 import os
 import time
-import pickle
+from streamline.utils.dump import dump_file
 import random
 import logging
 import numpy as np
@@ -292,10 +292,10 @@ class DataProcess(Job):
                     self.specified_categorical.remove(each)  # update user specified list
 
         logging.debug("binary cat: " + str(self.categorical_features))  # TESTING
-
-        with open(self.experiment_path + '/' + self.dataset.name +
-                  '/exploratory/binary_categorical_dict.pickle', 'wb') as outfile:
-            pickle.dump(binary_categoricals_dict, outfile)
+        
+        outfile = self.experiment_path + '/' + self.dataset.name +
+                  '/exploratory/binary_categorical_dict.pickle',
+        dump_file(binary_categoricals_dict, outfile)
 
         # Since some datasets might be very large, report this warning as a summary
         if len(quant_to_cat) > 0:
@@ -345,12 +345,12 @@ class DataProcess(Job):
         self.dataset.quantitative_variables = self.quantitative_features
 
         # Pickle feature type lists  #Ryan - where/how do these get used?
-        with open(self.experiment_path + '/' + self.dataset.name +
-                  '/exploratory/initial/initial_categorical_features.pickle', 'wb') as outfile:
-            pickle.dump(self.categorical_features, outfile)
-        with open(self.experiment_path + '/' + self.dataset.name +
-                  '/exploratory/initial/initial_quantitative_features.pickle', 'wb') as outfile:
-            pickle.dump(self.quantitative_features, outfile)
+        outfile = self.experiment_path + '/' + self.dataset.name +
+                  '/exploratory/initial/initial_categorical_features.pickle'
+        dump_file(self.categorical_features, outfile)
+        outfile = self.experiment_path + '/' + self.dataset.name +
+                  '/exploratory/initial/initial_quantitative_features.pickle'
+        dump_file(self.quantitative_features, outfile)
 
         with open(self.experiment_path + '/' + self.dataset.name +
                   '/exploratory/initial/initial_categorical_features.csv', 'w') as outfile:
@@ -415,14 +415,14 @@ class DataProcess(Job):
                              + 'DataProcessSummary.csv', index=True)
 
         # Pickle list of feature names to be treated as categorical variables
-        with open(self.experiment_path + '/' + self.dataset.name +
-                  '/exploratory/categorical_features.pickle', 'wb') as outfile:
-            pickle.dump(self.categorical_features, outfile)
+        outfile = self.experiment_path + '/' + self.dataset.name +
+                  '/exploratory/categorical_features.pickle'
+        dump_file(self.categorical_features, outfile)
 
         # Pickle list of processed feature names
-        with open(self.experiment_path + '/' + self.dataset.name +
-                  '/exploratory/post_processed_features.pickle', 'wb') as outfile:
-            pickle.dump(list(self.dataset.data.columns), outfile)
+        outfile = self.experiment_path + '/' + self.dataset.name +
+                  '/exploratory/post_processed_features.pickle'
+        dump_file(list(self.dataset.data.columns), outfile)
         # with open(self.experiment_path + '/' + self.dataset.name +
         #          '/exploratory/ProcessedFeatureNames.csv', 'w') as outfile:
         #    writer = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -565,9 +565,9 @@ class DataProcess(Job):
             ord_label.to_csv(self.experiment_path + '/' + self.dataset.name +
                              '/exploratory/Numerical_Encoding_Map.csv')
 
-            with open(self.experiment_path + '/' + self.dataset.name +
-                      '/exploratory/ordinal_encoding.pickle', 'wb') as outfile:
-                pickle.dump(ord_label, outfile)
+            outfile = self.experiment_path + '/' + self.dataset.name +
+                      '/exploratory/ordinal_encoding.pickle'
+            dump_file(ord_label, outfile)
         else:
             logging.info("No textual categorical features, skipping label encoding")
 
@@ -647,7 +647,7 @@ class DataProcess(Job):
 
             with open(self.experiment_path + '/' + self.dataset.name +
                       '/exploratory/engineered_features.pickle', 'wb') as outfile:
-                pickle.dump(high_missingness_features, outfile)
+                dump_file(high_missingness_features, outfile)
 
             with open(self.experiment_path + '/' + self.dataset.name +
                       '/exploratory/Missingness_Engineered_Features.csv', 'w') as outfile:
@@ -675,9 +675,9 @@ class DataProcess(Job):
             logging.info("Removing the following Features due to Missingness:")
             for feat in removed_variables:
                 logging.info('\t' + feat)
-            with open(self.experiment_path + '/' + self.dataset.name +
-                      '/exploratory/removed_features.pickle', 'wb') as outfile:
-                pickle.dump(removed_variables, outfile)
+            outfile = self.experiment_path + '/' + self.dataset.name +
+                      '/exploratory/removed_features.pickle'
+            dump_file(removed_variables, outfile)
             with open(self.experiment_path + '/' + self.dataset.name +
                       '/exploratory/Missingness_Feature_Cleaning.csv', 'w') as outfile:
                 outfile.write("\n".join(removed_variables))
@@ -711,7 +711,7 @@ class DataProcess(Job):
         # self.dataset.data = pd.concat([feature_only_data, label_data], axis=1)
         # with open(self.experiment_path + '/' + self.dataset.name
         #           + '/exploratory/one_hot_encoder.pickle') as file:
-        #     pickle.dump(enc, file)
+        #     dump_file(enc, file)
         raise NotImplementedError
 
     def categorical_feature_encoding_pandas(self):
@@ -744,9 +744,9 @@ class DataProcess(Job):
                     self.categorical_features.remove(feat)
             self.categorical_features += self.one_hot_features
 
-            with open(self.experiment_path + '/' + self.dataset.name +
-                      '/exploratory/one_hot_feature.pickle', 'wb') as outfile:
-                pickle.dump(self.one_hot_features, outfile)
+            outfile = self.experiment_path + '/' + self.dataset.name +
+                      '/exploratory/one_hot_feature.pickle'
+            dump_file(self.one_hot_features, outfile)
         else:
             logging.info("No non-binary categorical features, skipping categorical encoding")
 
@@ -798,9 +798,9 @@ class DataProcess(Job):
                 if feat in self.quantitative_features:
                     self.quantitative_features.remove(feat)
 
-            with open(self.experiment_path + '/' + self.dataset.name +
-                      '/exploratory/correlated_features.pickle', 'wb') as outfile:
-                pickle.dump(features_to_drop, outfile)
+            outfile = self.experiment_path + '/' + self.dataset.name +
+                      '/exploratory/correlated_features.pickle'
+            dump_file(features_to_drop, outfile)
 
             all_features = set(self.dataset.get_headers())
             features_kept = list(all_features - set(features_to_drop))

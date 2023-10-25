@@ -1,5 +1,5 @@
 import os
-import pickle
+from streamline.utils.dump import dump_file
 import sys
 from pathlib import Path
 

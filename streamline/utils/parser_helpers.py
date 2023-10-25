@@ -1,5 +1,5 @@
 import os
-import pickle
+from streamline.utils.dump import dump_file
 import argparse
 import logging
 from streamline.modeling.utils import SUPPORTED_MODELS_SMALL
@@ -52,8 +52,8 @@ def str2bool(v):
 def save_config(output_path, experiment_name, config_dict):
     if not os.path.exists(config_dict['output_path']):
         os.mkdir(str(config_dict['output_path']))
-    with open(output_path + '/' + experiment_name + '_params.pickle', 'wb') as file:
-        pickle.dump(config_dict, file, protocol=pickle.HIGHEST_PROTOCOL)
+    outfile = output_path + '/' + experiment_name + '_params.pickle'
+    dump_file(config_dict, outfile)
 
 
 def load_config(output_path, experiment_name, config=None):
